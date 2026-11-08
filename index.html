@@ -1071,19 +1071,215 @@ h1 {
 #avatarFallback {
     font-size: 28px;
 }
+/* Боковое меню */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    max-width: 85%;
+    height: 100%;
+    background: #17171f;
+    z-index: 1001;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    padding: 24px 18px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar.active {
+    transform: translateX(0);
+}
+
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.sidebar-header button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    background: #22222d;
+    border-radius: 14px;
+    margin-bottom: 25px;
+}
+
+.sidebar-user strong,
+.sidebar-user span {
+    display: block;
+}
+
+.sidebar-user span {
+    color: #999;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-menu button {
+    background: transparent;
+    border: none;
+    color: #ddd;
+    text-align: left;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.sidebar-menu button:hover {
+    background: #292936;
+    color: #a78bfa;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    color: #777;
+    font-size: 12px;
+    padding: 15px;
+}
+
+.menu-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 25px;
+    cursor: pointer;
+}
+/* Экран входа */
+.login-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #101014;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 360px;
+    background: #1a1a21;
+    border: 1px solid #292936;
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+}
+
+.login-logo {
+    font-size: 27px;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.login-logo span {
+    color: #a78bfa;
+}
+
+.login-box p {
+    color: #999;
+    margin-bottom: 24px;
+}
+
+.login-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #393946;
+    background: #101014;
+    color: white;
+    font-size: 22px;
+    text-align: center;
+    letter-spacing: 8px;
+    outline: none;
+}
+
+.login-button {
+    width: 100%;
+    margin-top: 15px;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: #8b5cf6;
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
 </style>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 
 <body>
+<div class="login-screen" id="loginScreen">
+    <div class="login-box">
 
+        <div class="login-logo">
+            My<span>Business</span>
+        </div>
+
+        <p id="loginMessage">Введите PIN-код для входа</p>
+
+        <input
+            type="password"
+            id="loginPin"
+            class="login-input"
+            inputmode="numeric"
+            maxlength="6"
+            placeholder="••••"
+        >
+
+        <button class="login-button" id="loginButton">
+            Войти
+        </button>
+
+    </div>
+</div>
 <div class="app">
 
     <header class="header">
 
         <div class="logo">My<span>Business</span></div>
 
-        <div class="profile">👤</div>
+        <button class="menu-button" id="menuButton">
+    ☰
+</button>
 
     </header>
 
@@ -1237,6 +1433,45 @@ h1 {
     </section>
 
 </div>
+<!-- Страница товаров -->
+<div id="productsPage" style="display: none;">
+
+    <h1>Мои товары</h1>
+
+    <section class="panel">
+        <div class="panel-heading">
+            <h3>Каталог товаров</h3>
+
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+
+    <button class="save-button"
+            style="width: auto; margin: 0; padding: 10px 14px;"
+            onclick="openProductModal()">
+        + Добавить
+    </button>
+
+    <button class="save-button"
+            style="width: auto; margin: 0; padding: 10px 14px; background: var(--purple-dark);"
+            onclick="openStockModal()">
+        + Пополнить
+    </button>
+<div class="card">
+    <h2>История поступлений</h2>
+    <div id="stockHistoryList">
+        <p>Поступлений пока нет</p>
+    </div>
+</div>
+</div>
+        </div>
+
+        <div id="productsList">
+            <p style="color: var(--muted); text-align: center;">
+                Товаров пока нет
+            </p>
+        </div>
+    </section>
+
+</div>
 <div id="plansPage" style="display: none;">
 
     <div class="section-title">Тарифы MyBusiness</div>
@@ -1301,6 +1536,57 @@ h1 {
 
 </div>
 </div>
+<!-- Затемнение фона -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- Боковое меню -->
+<aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-header">
+        <div class="logo">My<span>Business</span></div>
+        <button id="closeSidebar">✕</button>
+    </div>
+
+    <div class="sidebar-user">
+        <div class="profile-avatar">
+            <img id="sidebarAvatar" src="" alt="Аватар">
+            <span>👤</span>
+        </div>
+        <div>
+            <strong id="sidebarName">Пользователь</strong>
+            <span>Мой бизнес</span>
+        </div>
+    </div>
+
+    <div class="sidebar-menu">
+
+        <button onclick="showPage('home')">
+            🏠 Главная
+        </button>
+
+        <button onclick="showPage('products')">
+            📦 Мои товары
+        </button>
+
+        <button onclick="showPage('services')">
+            ✂️ Мои услуги
+        </button>
+
+        <button onclick="showPage('history')">
+            📜 История операций
+        </button>
+
+        <button onclick="showPage('profile')">
+            ⚙️ Настройки
+        </button>
+
+    </div>
+
+    <div class="sidebar-footer">
+        MyBusiness · 1.0
+    </div>
+
+</aside>
 <nav class="bottom-nav">
     <button class="nav-item active" onclick="showPage('home')">
     <span>⌂</span>
@@ -1362,6 +1648,92 @@ h1 {
     </div>
     </div>
 </div>
+<!-- Окно добавления товара -->
+<div class="modal-overlay" id="productModal">
+    <div class="modal">
+
+        <div class="modal-header">
+            <h2>Новый товар</h2>
+            <button class="close-modal" id="closeProductModal">✕</button>
+        </div>
+
+        <form id="productForm">
+
+            <label>Название товара</label>
+            <input id="productName" type="text"
+                   placeholder="Например, Краска для волос" required>
+
+            <label>Категория</label>
+            <select id="productCategory">
+                <option>Краски</option>
+                <option>Уход</option>
+                <option>Инструменты</option>
+                <option>Расходники</option>
+                <option>Прочее</option>
+            </select>
+
+            <label>Количество</label>
+            <input id="productQuantity" type="number"
+                   min="0.01" step="0.01"
+                   placeholder="10" required>
+
+            <label>Цена закупки (BYN)</label>
+            <input id="productPurchasePrice" type="number"
+                   min="0" step="0.01"
+                   placeholder="15.00" required>
+
+            <label>Цена продажи (BYN)</label>
+            <input id="productSellingPrice" type="number"
+                   min="0" step="0.01"
+                   placeholder="20.00" required>
+
+            <button class="save-button" type="submit">
+                Добавить товар
+            </button>
+
+        </form>
+    </div>
+    <!-- Окно поступления товара -->
+<div class="modal-overlay" id="stockModal">
+    <div class="modal">
+
+        <div class="modal-header">
+            <h2>Пополнение склада</h2>
+            <button class="close-modal" id="closeStockModal">✕</button>
+        </div>
+
+        <form id="stockForm">
+<label>Выбери товар</label>
+<select id="stockProduct" required>
+    <option value="">Выберите товар</option>
+</select>
+            <label>Количество поступления</label>
+            <input
+                id="stockQuantity"
+                type="number"
+                min="0.01"
+                step="0.01"
+                placeholder="Например, 5"
+                required
+            >
+
+            <label>Цена закупки за единицу (BYN)</label>
+            <input
+                id="stockPurchasePrice"
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="15.00"
+                required
+            >
+
+            <button class="save-button" type="submit">
+                Пополнить склад
+            </button>
+
+        </form>
+    </div>
+</div>
 <script>
 const modal = document.getElementById('operationModal');
 const closeModal = document.getElementById('closeModal');
@@ -1378,7 +1750,132 @@ let editIndex = null;
 let transactions = JSON.parse(
     localStorage.getItem('mybusiness_transactions') || '[]'
 );
+// Каталог товаров
+let products = JSON.parse(
+    localStorage.getItem('mybusiness_products') || '[]'
+);
 
+// Каталог услуг
+let services = JSON.parse(
+    localStorage.getItem('mybusiness_services') || '[]'
+);
+
+// История закупок и продаж
+let stockHistory = JSON.parse(
+    localStorage.getItem('mybusiness_stock_history') || '[]'
+);
+
+// Сохранение новых данных
+function saveBusinessData() {
+    localStorage.setItem('mybusiness_products', JSON.stringify(products));
+    localStorage.setItem('mybusiness_services', JSON.stringify(services));
+    localStorage.setItem('mybusiness_stock_history', JSON.stringify(stockHistory));
+}
+// Добавление нового товара
+function addProduct(name, category, quantity, purchasePrice, sellingPrice) {
+    const product = {
+        id: Date.now(),
+        name: name,
+        category: category,
+        quantity: Number(quantity),
+        purchasePrice: Number(purchasePrice),
+        sellingPrice: Number(sellingPrice)
+    };
+
+    products.push(product);
+    saveBusinessData();
+
+    return product;
+}
+
+// Отображение товаров
+function renderProducts() {
+    const list = document.getElementById('productsList');
+
+    if (!products.length) {
+        list.innerHTML = `
+            <p style="color: var(--muted); text-align: center;">
+                Товаров пока нет
+            </p>
+        `;
+        return;
+    }
+
+    list.innerHTML = '';
+
+    products.forEach(product => {
+        const item = document.createElement('div');
+
+        item.style.padding = '14px';
+        item.style.marginBottom = '10px';
+        item.style.background = 'var(--card2)';
+        item.style.borderRadius = '12px';
+
+        item.innerHTML = `
+    <strong>${product.name}</strong>
+    <p style="color: var(--muted); margin: 6px 0;">
+        ${product.category}
+    </p>
+    <p>Количество: ${product.quantity}</p>
+    <p>Закупка: ${money(product.purchasePrice)}</p>
+    <p>Продажа: ${money(product.sellingPrice)}</p>
+<button
+    onclick="editProduct(${product.id})"
+    style="
+        margin-top: 10px;
+        margin-right: 8px;
+        padding: 9px 14px;
+        background: var(--purple-dark);
+        color: white;
+        border: 1px solid var(--purple);
+        border-radius: 8px;
+        cursor: pointer;
+    "
+>
+    Изменить
+</button>
+    <button
+        onclick="deleteProduct(${product.id})"
+        style="
+            margin-top: 10px;
+            padding: 9px 14px;
+            background: var(--red);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        "
+    >
+        Удалить товар
+    </button>
+`;
+
+        list.appendChild(item);
+    });
+}
+function renderStockHistory() {
+    const container = document.getElementById('stockHistoryList');
+
+    if (!container) return;
+
+    if (stockHistory.length === 0) {
+        container.innerHTML = '<p>Поступлений пока нет</p>';
+        return;
+    }
+
+    container.innerHTML = [...stockHistory]
+        .reverse()
+        .map(item => `
+            <div class="history-item">
+                <strong>${item.productName}</strong>
+                <p>Дата: ${item.date}</p>
+                <p>Количество: +${item.quantity}</p>
+                <p>Цена за единицу: ${money(item.purchasePrice)}</p>
+                <p>Итого: ${money(item.totalCost)}</p>
+            </div>
+        `)
+        .join('');
+}
 // Закрытие окна
 closeModal.addEventListener('click', () => {
     modal.classList.remove('show');
@@ -2136,10 +2633,14 @@ periodFilter.onchange = renderTransactions;
         child.style.display =
             pageName === 'profile' ? 'block' : 'none';
     }
-    else if (child.id === 'plansPage') {
-        child.style.display =
-            pageName === 'plans' ? 'block' : 'none';
-    }
+  else if (child.id === 'plansPage') {
+    child.style.display =
+        pageName === 'plans' ? 'block' : 'none';
+}
+else if (child.id === 'productsPage') {
+    child.style.display =
+        pageName === 'products' ? 'block' : 'none';
+}
     else {
         child.style.display =
             pageName === 'home' ? '' : 'none';
@@ -2154,6 +2655,135 @@ periodFilter.onchange = renderTransactions;
 document.querySelector('.bottom-nav .nav-item:nth-child(4)')
     .classList.toggle('active', pageName === 'profile');
     renderTransactions();
+    if (pageName === 'products') {
+    renderProducts();
+}
+}
+
+// Удаление товара
+function deleteProduct(id) {
+    products = products.filter(product => product.id !== id);
+
+    saveBusinessData();
+    renderProducts();
+}
+function removeStock(productId, quantity) {
+    const product = products.find(item => item.id === Number(productId));
+
+    if (!product) {
+        alert('Товар не найден');
+        return false;
+    }
+
+    quantity = Number(quantity);
+
+    if (!Number.isFinite(quantity) || quantity <= 0) {
+        alert('Укажи корректное количество');
+        return false;
+    }
+
+    if (quantity > product.quantity) {
+        alert('На складе недостаточно товара');
+        return false;
+    }
+
+    product.quantity -= quantity;
+
+    stockHistory.push({
+        id: Date.now(),
+        productId: product.id,
+        productName: product.name,
+        type: 'sale',
+        quantity: -quantity,
+        purchasePrice: product.purchasePrice,
+        totalCost: quantity * product.purchasePrice,
+        date: new Date().toLocaleDateString('ru-RU')
+    });
+
+    saveBusinessData();
+    renderProducts();
+    renderStockHistory();
+
+    return true;
+}
+function editProduct(id) {
+    const product = products.find(product => product.id === id);
+
+    if (!product) return;
+
+    editingProductId = id;
+
+    document.getElementById('productName').value = product.name;
+    document.getElementById('productCategory').value = product.category;
+    document.getElementById('productQuantity').value = product.quantity;
+    document.getElementById('productPurchasePrice').value = product.purchasePrice;
+    document.getElementById('productSellingPrice').value = product.sellingPrice;
+
+    productModal.classList.add('show');
+}
+function openStockModal() {
+    stockForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const productId = Number(stockProduct.value);
+    const quantity = Number(
+        document.getElementById('stockQuantity').value
+    );
+    const purchasePrice = Number(
+        document.getElementById('stockPurchasePrice').value
+    );
+
+    const product = products.find(item => item.id === productId);
+
+    if (!product || quantity <= 0 || purchasePrice < 0) {
+        alert('Проверь введённые данные');
+        return;
+    }
+
+    const oldQuantity = Number(product.quantity);
+    const oldPrice = Number(product.purchasePrice);
+
+    const newQuantity = oldQuantity + quantity;
+
+    // Пересчитываем среднюю закупочную цену
+    product.purchasePrice = (
+        oldQuantity * oldPrice + quantity * purchasePrice
+    ) / newQuantity;
+
+    product.quantity = newQuantity;
+
+    stockHistory.push({
+        id: Date.now(),
+        productId: product.id,
+        productName: product.name,
+        quantity: quantity,
+        purchasePrice: purchasePrice,
+        totalCost: quantity * purchasePrice,
+        date: new Date().toLocaleDateString('ru-RU')
+    });
+
+    saveBusinessData();
+    renderProducts();
+    renderStockHistory();
+    stockForm.reset();
+    stockModal.classList.remove('show');
+
+    alert('Склад успешно пополнен!');
+});
+    stockForm.reset();
+
+    stockProduct.innerHTML = '<option value="">Выберите товар</option>';
+
+    products.forEach(product => {
+        const option = document.createElement('option');
+
+        option.value = product.id;
+        option.textContent = product.name;
+
+        stockProduct.appendChild(option);
+    });
+
+    stockModal.classList.add('show');
 }
 // Сохранение операции
 
@@ -2258,6 +2888,175 @@ function loadTelegramProfile() {
 }
 
 loadTelegramProfile();
+// Элементы окна добавления товара
+const productModal = document.getElementById('productModal');
+const productForm = document.getElementById('productForm');
+const closeProductModal = document.getElementById('closeProductModal');
+const stockModal = document.getElementById('stockModal');
+const stockForm = document.getElementById('stockForm');
+const stockProduct = document.getElementById('stockProduct');
+const closeStockModal = document.getElementById('closeStockModal');
+closeStockModal.addEventListener('click', () => {
+    stockModal.classList.remove('show');
+});
+// Открытие окна добавления товара
+let editingProductId = null;
+
+function openProductModal() {
+    editingProductId = null;
+    productForm.reset();
+    productModal.classList.add('show');
+}
+// Закрытие окна товара
+closeProductModal.addEventListener('click', () => {
+    productModal.classList.remove('show');
+});
+
+// Добавление товара через форму
+productForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const name = document.getElementById('productName').value.trim();
+    const category = document.getElementById('productCategory').value;
+    const quantity = document.getElementById('productQuantity').value;
+    const purchasePrice = document.getElementById('productPurchasePrice').value;
+    const sellingPrice = document.getElementById('productSellingPrice').value;
+
+    if (editingProductId !== null) {
+    const product = products.find(product => product.id === editingProductId);
+
+    if (product) {
+        product.name = name;
+        product.category = category;
+        product.quantity = Number(quantity);
+        product.purchasePrice = Number(purchasePrice);
+        product.sellingPrice = Number(sellingPrice);
+    }
+
+    saveBusinessData();
+    editingProductId = null;
+} else {
+    addProduct(name, category, quantity, purchasePrice, sellingPrice);
+}
+
+    productForm.reset();
+    productModal.classList.remove('show');
+
+    alert('Товар успешно добавлен!');
+});
+// Боковое меню
+const sidebar = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+const menuButton = document.getElementById('menuButton');
+const closeSidebar = document.getElementById('closeSidebar');
+
+// Открытие меню
+function openSidebar() {
+    sidebar.classList.add('active');
+    sidebarOverlay.classList.add('active');
+}
+
+// Закрытие меню
+function hideSidebar() {
+    sidebar.classList.remove('active');
+    sidebarOverlay.classList.remove('active');
+}
+
+menuButton.addEventListener('click', openSidebar);
+closeSidebar.addEventListener('click', hideSidebar);
+sidebarOverlay.addEventListener('click', hideSidebar);
+// ==================================
+// ЗАЩИТА ПРИ ВХОДЕ В MYBUSINESS
+// ==================================
+
+const loginScreen = document.getElementById('loginScreen');
+const loginPin = document.getElementById('loginPin');
+const loginButton = document.getElementById('loginButton');
+const loginMessage = document.getElementById('loginMessage');
+
+let firstPin = '';
+let pinStage = localStorage.getItem('mybusiness_pin_hash')
+    ? 'login'
+    : 'create';
+
+// Хеширование PIN
+async function hashPin(pin) {
+    const data = new TextEncoder().encode(pin);
+    const hash = await crypto.subtle.digest('SHA-256', data);
+
+    return Array.from(new Uint8Array(hash))
+        .map(byte => byte.toString(16).padStart(2, '0'))
+        .join('');
+}
+
+// Настройка экрана
+if (pinStage === 'create') {
+    loginMessage.textContent = 'Придумайте PIN-код из 4–6 цифр';
+    loginButton.textContent = 'Продолжить';
+} else {
+    loginMessage.textContent = 'Введите PIN-код для входа';
+    loginButton.textContent = 'Войти';
+}
+
+// Нажатие на кнопку
+loginButton.addEventListener('click', async () => {
+
+    const pin = loginPin.value;
+
+    if (!/^\d{4,6}$/.test(pin)) {
+        loginMessage.textContent = 'Введите от 4 до 6 цифр';
+        return;
+    }
+
+    // Создание PIN
+    if (pinStage === 'create') {
+
+        firstPin = pin;
+        pinStage = 'confirm';
+
+        loginPin.value = '';
+        loginMessage.textContent = 'Повторите PIN-код';
+        loginButton.textContent = 'Подтвердить';
+
+        return;
+    }
+
+    // Подтверждение PIN
+    if (pinStage === 'confirm') {
+
+        if (pin !== firstPin) {
+            firstPin = '';
+            pinStage = 'create';
+
+            loginPin.value = '';
+            loginMessage.textContent = 'PIN-коды не совпали. Придумайте новый';
+            loginButton.textContent = 'Продолжить';
+
+            return;
+        }
+
+        const hash = await hashPin(pin);
+
+        localStorage.setItem('mybusiness_pin_hash', hash);
+
+        loginScreen.style.display = 'none';
+        return;
+    }
+
+    // Обычный вход
+    if (pinStage === 'login') {
+
+        const hash = await hashPin(pin);
+        const savedHash = localStorage.getItem('mybusiness_pin_hash');
+
+        if (hash === savedHash) {
+            loginScreen.style.display = 'none';
+        } else {
+            loginMessage.textContent = 'Неверный PIN-код';
+            loginPin.value = '';
+        }
+    }
+});
 </script>
 </body>
 </html>
